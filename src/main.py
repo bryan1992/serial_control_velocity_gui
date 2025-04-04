@@ -43,7 +43,18 @@ class VentanaSencilla(QMainWindow):
 
         # Botón booleano para iniciar conexión.
         self.boton_booleano = QPushButton("Iniciar conexión.", self)
+        self.boton_estado = False # Estado inicial.
+        self.boton_booleano.clicked.connect(self.toggle_boolean)
         self.boton_booleano.setGeometry (50, 100, 200, 30)
+   
+    def toggle_boolean(self):
+        self.boton_estado = not self.boton_estado
+        if self.boton_estado == True:
+            self.boton_booleano.setText("Conexión iniciada.")
+        else:
+            self.boton_booleano.setText("Iniciar conexión.")
+
+    
 
 # Configurar la aplicación
 app = QApplication(sys.argv)                                # Necesario para cualquier aplicación PyQt
