@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel
+from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel, QPushButton
 import serial.tools.list_ports
 
 print ("Mi proyecto de control serial")
@@ -40,6 +40,10 @@ class VentanaSencilla(QMainWindow):
         self.combo_box.setGeometry(50, 50, 200, 30)         # Posición y tamaño (x, y, ancho, alto)
         # Conectar el evento de abrir el combo box al método de actualización de puertos
         #self.combo_box.showPopup = self.actualizar_puertos_com
+
+        # Botón booleano para iniciar conexión.
+        self.boton_booleano = QPushButton("Iniciar conexión.", self)
+        self.boton_booleano.setGeometry (50, 100, 200, 30)
 
 # Configurar la aplicación
 app = QApplication(sys.argv)                                # Necesario para cualquier aplicación PyQt
