@@ -1,5 +1,6 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel, QPushButton
+from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel, QPushButton, QSlider
+from PyQt6.QtCore import Qt
 from serial import Serial
 import serial.tools.list_ports
 
@@ -32,8 +33,9 @@ class VentanaSencilla(QMainWindow):
         self.conectado = False
         self.boton_estado = False
         self.estado_motor = False
-        self.sentido_motor = False # Sentido horario.
-        
+        self.sentido_motor = True # Sentido horario.
+        self.velocidad_motor = 0.00
+                
         # Ventana principal.                              
         self.setWindowTitle("Control de velocidad serial")    
         self.setGeometry(200, 200, 400, 300)                  
@@ -68,11 +70,27 @@ class VentanaSencilla(QMainWindow):
         self.boton_sentido_giro = QPushButton("Sentido de giro: Horario.", self)
         self.boton_sentido_giro.setGeometry(10, 200, 200, 30)
 
+        # Control de velocidad.
+        self.slider_velocidad = QSlider(Qt.Orientation.Horizontal,self)
+        self.slider_velocidad.setMinimum(0)
+        self.slider_velocidad.setMaximum(100)
+        self.slider_velocidad.setValue(0)
+        self.slider_velocidad.setTickInterval(5)
+        self.slider_velocidad.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.slider_velocidad.setGeometry(10, 230, 200, 30)
+
+        # Indicador de velocidad.
+        self.indicador_velocidad = QLabel(f"Velocidad: {self.velocidad_motor}", self)
+        self.indicador_velocidad.setGeometry(10, 250, 200, 30)
+
     def conectar_senales(self):
         self.start_session.clicked.connect(self.abrir_o_cerrar)
         self.boton_arranque.clicked.connect(self.arranque_motor)
         self.boton_arranque.clicked.connect(self.enviar_dato_serial)
+        self.boton_arranque.clicked.connect(self.calcular_velocidad)
         self.boton_sentido_giro.clicked.connect(self.cambiar_sentido_giro)
+        self.boton_sentido_giro.clicked.connect(self.calcular_velocidad)
+        self.slider_velocidad.valueChanged.connect(self.calcular_velocidad)
 
     def abrir_o_cerrar(self):
         if not self.conectado:
@@ -118,22 +136,33 @@ class VentanaSencilla(QMainWindow):
             self.boton_arranque.setText("Arrancar.")
     
     def cambiar_sentido_giro(self):
-        if not self.sentido_motor:
-            self.sentido_motor = True
-            self.boton_sentido_giro.setText("Sentido de giro: Antihorario.")
-        else:
+        if self.sentido_motor:
             self.sentido_motor = False
+            self.boton_sentido_giro.setText("Sentido de giro: Anti-horario.")
+        else:
+            self.sentido_motor = True
             self.boton_sentido_giro.setText("Sentido de giro: Horario.")
 
     def enviar_dato_serial(self):
         if self.serial_port and self.serial_port.is_open:
             if not self.estado_motor:
-                self.serial_port.write(b"1000")
+                self.serial_port.write(f"1000")
                 print("500")
             else:
-                self.serial_port.write(b"0")
+                self.serial_port.write(f"0")
                 print("0")
 
+    def calcular_velocidad(self):
+        if self.estado_motor:
+            self.velocidad_motor = self.slider_velocidad.value()
+            if self.sentido_motor:
+                self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
+            else:
+                self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor*-1}")
+        else:
+            self.velocidad_motor = 0.00
+            self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
+            
 # Configurar la aplicación
 app = QApplication(sys.argv)                                # Necesario para cualquier aplicación PyQt
 ventana = VentanaSencilla()                                 # Se crea una instancia de la clase "VentanaSencilla".
