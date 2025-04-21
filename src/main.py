@@ -31,6 +31,8 @@ class VentanaSencilla(QMainWindow):
         self.serial_port = None
         self.conectado = False
         self.boton_estado = False
+        self.estado_motor = False
+        self.sentido_motor = False # Sentido horario.
         
         # Ventana principal.                              
         self.setWindowTitle("Control de velocidad serial")    
@@ -38,7 +40,7 @@ class VentanaSencilla(QMainWindow):
 
         self.crear_widgets()
         self.conectar_senales()
-                        
+                                
     def crear_widgets(self):
 
         # Etiqueta de Combo box.
@@ -52,14 +54,24 @@ class VentanaSencilla(QMainWindow):
 
         # Botón booleano para iniciar conexión.
         self.start_session = QPushButton("Desconectado", self)
-        self.start_session.setGeometry (10, 100, 200, 30)
+        self.start_session.setGeometry(10, 100, 200, 30)
 
-        #Indicador de estado de puerto.
+        # Indicador de estado de puerto.
         self.estatus = QLabel("No conectado", self)
         self.estatus.move(10, 130)
 
+        # Botón de arranque y paro.
+        self.boton_arranque = QPushButton("Arrancar.",self)
+        self.boton_arranque.setGeometry(10, 170, 200, 30)
+
+        # Botón de sentido de giro.
+        self.boton_sentido_giro = QPushButton("Horario.", self)
+        self.boton_sentido_giro.setGeometry(10, 200, 200, 30)
+
     def conectar_senales(self):
         self.start_session.clicked.connect(self.abrir_o_cerrar)
+        self.boton_arranque.clicked.connect(self.arranque_motor)
+        self.boton_sentido_giro.clicked.connect(self.cambiar_sentido_giro)
 
     def abrir_o_cerrar(self):
         if not self.conectado:
@@ -95,6 +107,22 @@ class VentanaSencilla(QMainWindow):
             self.serial_port.close()
             self.conectado = False
             self.estatus.setText("Desconectado.")
+
+    def arranque_motor(self):
+        if not self.estado_motor:
+            self.estado_motor = True
+            self.boton_arranque.setText("Detener.")
+        else:
+            self.estado_motor = False 
+            self.boton_arranque.setText("Arrancar.")
+    
+    def cambiar_sentido_giro(self):
+        if not self.sentido_motor:
+            self.sentido_motor = True
+            self.boton_sentido_giro.setText("Antihorario.")
+        else:
+            self.sentido_motor = False
+            self.boton_sentido_giro.setText("Horario.")
 
 # Configurar la aplicación
 app = QApplication(sys.argv)                                # Necesario para cualquier aplicación PyQt
