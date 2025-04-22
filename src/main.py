@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel, QPushB
 from PyQt6.QtCore import Qt
 from serial import Serial
 import serial.tools.list_ports
+import struct
 
 print ("Mi proyecto de control serial")
 
@@ -35,7 +36,7 @@ class VentanaSencilla(QMainWindow):
         self.estado_motor = False
         self.sentido_motor = True # Sentido horario.
         self.velocidad_motor = 0.00
-                
+                        
         # Ventana principal.                              
         self.setWindowTitle("Control de velocidad serial")    
         self.setGeometry(200, 200, 400, 300)                  
@@ -146,11 +147,11 @@ class VentanaSencilla(QMainWindow):
     def enviar_dato_serial(self):
         if self.serial_port and self.serial_port.is_open:
             if not self.estado_motor:
-                self.serial_port.write(f"1000")
-                print("500")
+                self.serial_port.write(f"{self.velocidad_motor}".encode())
+                print(self.velocidad_motor)
             else:
-                self.serial_port.write(f"0")
-                print("0")
+                self.serial_port.write(f"{self.velocidad_motor}".encode())
+                print(self.velocidad_motor)
 
     def calcular_velocidad(self):
         if self.estado_motor:
@@ -158,11 +159,13 @@ class VentanaSencilla(QMainWindow):
             if self.sentido_motor:
                 self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
             else:
-                self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor*-1}")
+                self.velocidad_motor = self.velocidad_motor * -1
+                self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
         else:
             self.velocidad_motor = 0.00
             self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
-            
+        self.enviar_dato_serial()
+
 # Configurar la aplicación
 app = QApplication(sys.argv)                                # Necesario para cualquier aplicación PyQt
 ventana = VentanaSencilla()                                 # Se crea una instancia de la clase "VentanaSencilla".
