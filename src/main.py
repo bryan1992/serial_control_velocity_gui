@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel, QPushButton, QSlider
 from PyQt6.QtCore import Qt
 from serial import Serial
@@ -40,8 +41,9 @@ class VentanaSencilla(QMainWindow):
                         
         # Ventana principal.                              
         self.setWindowTitle("Control de velocidad serial")    
-        self.setGeometry(200, 200, 400, 300)                  
+        self.setGeometry(300, 200, 400, 300)                  
 
+        self.cargar_estilo()
         self.crear_widgets()
         self.conectar_senales()
                                 
@@ -84,6 +86,11 @@ class VentanaSencilla(QMainWindow):
         # Indicador de velocidad.
         self.indicador_velocidad = QLabel(f"Velocidad: {self.velocidad_motor}", self)
         self.indicador_velocidad.setGeometry(10, 250, 200, 30)
+
+    def cargar_estilo(self):
+        ruta_estilo = os.path.abspath(os.path.join(os.path.dirname(__file__), "estilo.qss"))
+        with open("estilo.qss", "r") as archivo:
+            self.setStyleSheet(archivo.read())
 
     def conectar_senales(self):
         self.start_session.clicked.connect(self.abrir_o_cerrar)
