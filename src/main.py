@@ -41,7 +41,7 @@ class VentanaSencilla(QMainWindow):
                         
         # Ventana principal.                              
         self.setWindowTitle("Control de velocidad serial")    
-        self.setGeometry(300, 200, 400, 300)                  
+        self.setGeometry(300, 200, 400, 400)                  
 
         self.cargar_estilo()
         self.crear_widgets()
@@ -72,7 +72,7 @@ class VentanaSencilla(QMainWindow):
 
         # Botón de sentido de giro.
         self.boton_sentido_giro = QPushButton("Sentido de giro: Horario.", self)
-        self.boton_sentido_giro.setGeometry(10, 200, 200, 30)
+        self.boton_sentido_giro.setGeometry(10, 220, 200, 30)
 
         # Control de velocidad.
         self.slider_velocidad = QSlider(Qt.Orientation.Horizontal,self)
@@ -81,11 +81,11 @@ class VentanaSencilla(QMainWindow):
         self.slider_velocidad.setValue(0)
         self.slider_velocidad.setTickInterval(5)
         self.slider_velocidad.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.slider_velocidad.setGeometry(10, 230, 200, 30)
+        self.slider_velocidad.setGeometry(10, 260, 200, 30)
 
         # Indicador de velocidad.
         self.indicador_velocidad = QLabel(f"Velocidad: {self.velocidad_motor}", self)
-        self.indicador_velocidad.setGeometry(10, 250, 200, 30)
+        self.indicador_velocidad.setGeometry(10, 300, 200, 30)
 
     def cargar_estilo(self):
         ruta_estilo = os.path.abspath(os.path.join(os.path.dirname(__file__), "estilo.qss"))
