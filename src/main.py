@@ -35,7 +35,8 @@ class VentanaSencilla(QMainWindow):
         self.boton_estado = False
         self.estado_motor = False
         self.sentido_motor = True # Sentido horario.
-        self.velocidad_motor = 0.00
+        self.velocidad_motor = 0
+        self.dato_serial = 0
                         
         # Ventana principal.                              
         self.setWindowTitle("Control de velocidad serial")    
@@ -150,6 +151,7 @@ class VentanaSencilla(QMainWindow):
                 self.serial_port.write(f"{self.velocidad_motor}".encode())
                 print(self.velocidad_motor)
             else:
+
                 self.serial_port.write(f"{self.velocidad_motor}".encode())
                 print(self.velocidad_motor)
 
@@ -162,7 +164,7 @@ class VentanaSencilla(QMainWindow):
                 self.velocidad_motor = self.velocidad_motor * -1
                 self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
         else:
-            self.velocidad_motor = 0.00
+            self.velocidad_motor = 0
             self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
         self.enviar_dato_serial()
 
