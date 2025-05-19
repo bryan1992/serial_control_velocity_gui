@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "control_serial",
+			"path": "control_serial"
+		},
+		{
+			"name": "arduino",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
