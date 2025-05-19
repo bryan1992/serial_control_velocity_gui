@@ -77,7 +77,7 @@ class VentanaSencilla(QMainWindow):
         # Control de velocidad.
         self.slider_velocidad = QSlider(Qt.Orientation.Horizontal,self)
         self.slider_velocidad.setMinimum(0)
-        self.slider_velocidad.setMaximum(100)
+        self.slider_velocidad.setMaximum(1500)
         self.slider_velocidad.setValue(0)
         self.slider_velocidad.setTickInterval(5)
         self.slider_velocidad.setTickPosition(QSlider.TickPosition.TicksBelow)
