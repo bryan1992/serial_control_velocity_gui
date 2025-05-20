@@ -3,8 +3,10 @@ const int stepX = 2;
 const int dirX = 5;
 const int enPin = 8;
 
-unsigned long tiempo_anterior = 0;
+unsigned long tiempo_anterior = micros();
+unsigned long tiempo_actual = 0;
 unsigned long tiempo_acumulado = 0;
+unsigned long delta = 0;
 unsigned int intervalo_bajo = 800;
 unsigned int intervalo_alto = 800;
 bool pulso = true;
@@ -19,13 +21,15 @@ void setup() {
 }
 
 void loop() {
-  unsigned long tiempo_actual = micros();
-    
+  tiempo_actual = micros();
+  delta = tiempo_actual - tiempo_anterior;
+  tiempo_acumulado = tiempo_acumulado + delta;
+  tiempo_anterior = tiempo_actual;
+      
   if(pulso == true)
     {
       if(tiempo_acumulado < intervalo_alto)
         { 
-          tiempo_acumulado = tiempo_acumulado + (tiempo_actual - tiempo_anterior);
           digitalWrite(stepX, HIGH);
           delayMicroseconds(5);
         }
