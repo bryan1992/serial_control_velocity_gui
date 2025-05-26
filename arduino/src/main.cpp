@@ -6,9 +6,9 @@ const int enPin = 8;
 unsigned long tiempoAnterior = micros();
 unsigned long tiempoActual = 0;
 unsigned long tiempoToggle = 0;
-unsigned long intervalo = 800;
+unsigned long intervalo = 0;
 unsigned long ultimoPrint;
-int valor = 800;
+int valor = 0;
 bool pulso = true;
 String serialBuffer;
 

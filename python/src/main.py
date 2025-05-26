@@ -155,10 +155,11 @@ class VentanaSencilla(QMainWindow):
     def enviar_dato_serial(self):
         if self.serial_port and self.serial_port.is_open:
             if not self.estado_motor:
-                self.serial_port.write(f"{self.velocidad_motor}".encode())
+                cadena = str(self.velocidad_motor) + "\n"
+                self.serial_port.write(f"{cadena}".encode())
                 print(self.velocidad_motor)
             else:
-
+                cadena = str(self.velocidad_motor) + "\n"
                 self.serial_port.write(f"{self.velocidad_motor}".encode())
                 print(self.velocidad_motor)
 
