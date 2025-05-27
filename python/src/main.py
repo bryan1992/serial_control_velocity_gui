@@ -5,6 +5,7 @@ from PyQt6.QtCore import Qt
 from serial import Serial
 import serial.tools.list_ports
 import struct
+import time
 
 print ("Mi proyecto de control serial")
 
@@ -50,9 +51,9 @@ class VentanaSencilla(QMainWindow):
     def crear_widgets(self):
 
         # Etiqueta de Combo box.
-        self.label = QLabel("Puertos COM disponibles:", self)
-        self.label.move(10, 20)
-        self.label.adjustSize()
+        self.combo_box_label = QLabel("Puertos COM disponibles:", self)
+        self.combo_box_label.move(10, 20)
+        self.combo_box_label.adjustSize()
 
         # Combo box.
         self.combo_box = ComboBoxConActualizacion(self)
@@ -87,6 +88,11 @@ class VentanaSencilla(QMainWindow):
         self.indicador_velocidad = QLabel(f"Velocidad: {self.velocidad_motor}", self)
         self.indicador_velocidad.setGeometry(10, 300, 200, 30)
 
+        # Etiqueta de caja de recepción.
+        self.label_recepcion = QLabel("Datos desde Arduino.", self)
+        self.label_recepcion.move(220, 20)
+        self.label_recepcion.adjustSize()
+
     def cargar_estilo(self):
         ruta_estilo = os.path.abspath(os.path.join(os.path.dirname(__file__), "estilo.qss"))
         with open("estilo.qss", "r") as archivo:
@@ -95,7 +101,6 @@ class VentanaSencilla(QMainWindow):
     def conectar_senales(self):
         self.start_session.clicked.connect(self.abrir_o_cerrar)
         self.boton_arranque.clicked.connect(self.arranque_motor)
-        self.boton_arranque.clicked.connect(self.enviar_dato_serial)
         self.boton_arranque.clicked.connect(self.calcular_velocidad)
         self.boton_sentido_giro.clicked.connect(self.cambiar_sentido_giro)
         self.boton_sentido_giro.clicked.connect(self.calcular_velocidad)
@@ -123,6 +128,7 @@ class VentanaSencilla(QMainWindow):
              if self.serial_port.is_open:
                  self.conectado = True
                  self.estatus.setText ("Conectado")
+                 time.sleep(2)
                 
              else:
                  self.estatus.setText("No se pudo abrir el puerto")
@@ -154,14 +160,9 @@ class VentanaSencilla(QMainWindow):
 
     def enviar_dato_serial(self):
         if self.serial_port and self.serial_port.is_open:
-            if not self.estado_motor:
-                cadena = str(self.velocidad_motor) + "\n"
-                self.serial_port.write(f"{cadena}".encode())
-                print(self.velocidad_motor)
-            else:
-                cadena = str(self.velocidad_motor) + "\n"
-                self.serial_port.write(f"{self.velocidad_motor}".encode())
-                print(self.velocidad_motor)
+            cadena = f"{self.velocidad_motor}\n"
+            self.serial_port.write(cadena.encode())
+            print(f"Enviado: {self.velocidad_motor}")
 
     def calcular_velocidad(self):
         if self.estado_motor:
