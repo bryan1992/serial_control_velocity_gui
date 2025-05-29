@@ -7,6 +7,9 @@ import serial.tools.list_ports
 import struct
 import time
 
+# Comando para activar entorno virtual:
+# venv\Scripts\activate
+
 print ("Mi proyecto de control serial")
 
 # Se crea sub-clase para hacer que el combo box pueda actualizar puertos al dar clic.
@@ -166,7 +169,7 @@ class VentanaSencilla(QMainWindow):
 
     def calcular_velocidad(self):
         if self.estado_motor:
-            self.velocidad_motor = self.slider_velocidad.value()
+            self.velocidad_motor = self.slider_velocidad.maximum() - self.slider_velocidad.value() + 1
             if self.sentido_motor:
                 self.indicador_velocidad.setText(f"Velocidad: {self.velocidad_motor}")
             else:
