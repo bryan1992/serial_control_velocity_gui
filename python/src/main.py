@@ -142,8 +142,11 @@ class VentanaSencilla(QMainWindow):
     def cerrar_puerto(self):
         if self.serial_port and self.serial_port.is_open:
             self.serial_port.close()
+            del self.serial_port
+            self.serial_port = None
             self.conectado = False
             self.estatus.setText("Desconectado.")
+            print("Desconectado.")
 
     def arranque_motor(self):
         if not self.estado_motor:
