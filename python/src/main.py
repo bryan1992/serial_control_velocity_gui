@@ -132,6 +132,9 @@ class VentanaSencilla(QMainWindow):
                  self.conectado = True
                  self.estatus.setText ("Conectado")
                  time.sleep(2)
+                 # Limpia buffers para evitar errores por datos residuales
+                 self.serial_port.reset_input_buffer()
+                 self.serial_port.reset_output_buffer()
                 
              else:
                  self.estatus.setText("No se pudo abrir el puerto")
@@ -140,8 +143,14 @@ class VentanaSencilla(QMainWindow):
              print(f"Error: {e}")
 
     def cerrar_puerto(self):
-        if self.serial_port and self.serial_port.is_open:
+        try:
+            self.serial_port.flush()
+            time.sleep(0.1)
             self.serial_port.close()
+            time.sleep(0.1)
+        except Exception as e:
+            print("Error al cerrar {e}")
+        finally:     
             del self.serial_port
             self.serial_port = None
             self.conectado = False

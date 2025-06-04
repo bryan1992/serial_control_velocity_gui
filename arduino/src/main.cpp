@@ -8,8 +8,10 @@ unsigned long tiempoActual = 0;
 unsigned long tiempoToggle = 0;
 unsigned long intervalo = 0;
 unsigned long ultimoPrint;
+unsigned long ultimoSerial = 0;
 int valor = 0;
 bool pulso = true;
+bool clienteActivo;
 String serialBuffer;
 
 void setup() {
@@ -31,7 +33,7 @@ void setup() {
 void loop() {
 
   // Impresión periódica de intervalo.
-  if (millis() - ultimoPrint >= 2000)
+  if (Serial && (millis() - ultimoPrint >= 2000))
     {
       Serial.print("La velocidad actual es: ");
       Serial.println(valor);
@@ -73,10 +75,17 @@ void loop() {
         intervalo = abs(valor);
         Serial.println(valor);
         serialBuffer = "";
+        ultimoSerial = millis();
+        clienteActivo = true;
       }
     else if (isDigit(c) || (c == '-'))
       {
         serialBuffer += c; // Concatenar caracteres en buffer, antes de recibir \n.
       }
   } 
+
+  if ((millis() - ultimoSerial) > 5000)
+    {
+      clienteActivo = false;
+    }
 }
